@@ -1,0 +1,7 @@
+import mongoose from 'mongoose';
+
+const suspectSchema = new mongoose.Schema({ suspectId: { type: String, required: true }, name: { type: String, required: true }, age: Number, occupation: String, imageUrl: { type: String, default: '' }, background: String, relationshipToIncident: String, motive: String, alibi: String, statement: String }, { _id: false });
+const evidenceSchema = new mongoose.Schema({ evidenceId: { type: String, required: true }, title: String, type: { type: String, enum: ['WHATSAPP', 'IMAGE', 'CCTV', 'WITNESS_STATEMENT', 'DOCUMENT'] }, description: String, content: mongoose.Schema.Types.Mixed, mediaUrl: String, timestamp: String, associatedSuspectIds: [String], clueSignificance: String, metadata: mongoose.Schema.Types.Mixed }, { _id: false });
+const investigationSchema = new mongoose.Schema({ title: { type: String, required: true }, originalScenario: { type: String, required: true }, category: String, difficulty: String, caseNumber: String, caseDescription: String, incidentLocation: String, incidentDate: String, suspects: [suspectSchema], evidence: [evidenceSchema], timeline: [mongoose.Schema.Types.Mixed], solution: { culpritId: String, motive: String, explanation: String, decisiveEvidenceIds: [String], reasoning: String }, verdict: { selectedSuspectId: String, isCorrect: Boolean, submittedAt: Date }, status: { type: String, enum: ['ACTIVE', 'SOLVED'], default: 'ACTIVE' } }, { timestamps: true, minimize: false });
+
+export default mongoose.models.Investigation || mongoose.model('Investigation', investigationSchema);
